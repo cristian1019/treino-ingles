@@ -1,0 +1,7 @@
+# backups de progresso exportados pelo app
+treino-ingles-backup-*.json
+
+# sistema
+Thumbs.db
+desktop.ini
+.DS_Store

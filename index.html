@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Treino de Inglês</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header class="topo">
+  <a class="marca" href="#inicio" data-ir="inicio"><span class="marca-icone">⌨️</span> Treino de Inglês</a>
+  <nav class="menu">
+    <a href="#inicio" data-ir="inicio">Início</a>
+    <a href="#vocab" data-ir="vocab">Vocabulário</a>
+    <a href="#conversa" data-ir="conversa">Conversa IA</a>
+    <a href="#revisao" data-ir="revisao">Revisão</a>
+    <a href="#dicionario" data-ir="dicionario">Dicionário</a>
+    <a href="#stats" data-ir="stats">Estatísticas</a>
+  </nav>
+  <button class="btn-icone" id="btnTema" title="Tema claro/escuro">🌓</button>
+</header>
+
+<main id="app">
+
+  <!-- INÍCIO -->
+  <section class="tela" id="tela-inicio">
+    <div class="hero">
+      <h1>Aprenda inglês <em>digitando</em>.</h1>
+      <p class="sub">1000 palavras em 100 fases, frases do dia a dia e uma IA para conversar em inglês.</p>
+    </div>
+    <div class="resumo" id="resumoInicio"></div>
+    <div class="cartoes-inicio">
+      <button class="cartao-grande" id="btnContinuar">
+        <span class="cg-icone">📚</span>
+        <span class="cg-titulo">Continuar vocabulário</span>
+        <span class="cg-desc" id="descContinuar"></span>
+      </button>
+      <button class="cartao-grande" data-ir="conversa">
+        <span class="cg-icone">🗣️</span>
+        <span class="cg-titulo">Conversar com a IA</span>
+        <span class="cg-desc">Fale em inglês com uma IA que corrige, dá dicas e ensina frases novas.</span>
+      </button>
+      <button class="cartao-grande" data-ir="revisao">
+        <span class="cg-icone">🔁</span>
+        <span class="cg-titulo">Revisar erros</span>
+        <span class="cg-desc" id="descRevisao"></span>
+      </button>
+    </div>
+    <div class="atalhos">
+      <h3>Atalhos</h3>
+      <ul>
+        <li><kbd>Tab</kbd> ouvir de novo</li>
+        <li><kbd>Ctrl</kbd>+<kbd>Espaço</kbd> dica (tradução)</li>
+        <li><kbd>Enter</kbd> próxima / conferir</li>
+        <li><kbd>Esc</kbd> pausar / sair</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- VOCABULÁRIO: níveis e fases -->
+  <section class="tela" id="tela-vocab">
+    <h2>Vocabulário</h2>
+    <div class="abas" id="abasNivel"></div>
+    <p class="nivel-info" id="nivelInfo"></p>
+    <div class="grade-fases" id="gradeFases"></div>
+    <h3 class="mt">Treinar por tema</h3>
+    <div class="chips" id="chipsTemas"></div>
+  </section>
+
+  <!-- JOGO DE DIGITAÇÃO -->
+  <section class="tela" id="tela-jogo">
+    <div class="jogo-topo">
+      <button class="btn-link" id="btnSairJogo">← Sair</button>
+      <div class="jogo-titulo" id="jogoTitulo"></div>
+      <div class="jogo-metricas">
+        <span><b id="mPpm">0</b> ppm</span>
+        <span><b id="mPrec">100</b>%</span>
+      </div>
+    </div>
+    <div class="progresso"><div class="progresso-barra" id="jogoBarra"></div></div>
+    <div class="cartao-palavra" id="cartaoPalavra">
+      <div class="cp-emoji" id="cpEmoji"></div>
+      <div class="cp-tema" id="cpTema"></div>
+      <div class="cp-etapa" id="cpEtapa"></div>
+      <div class="digitar" id="areaDigitar"></div>
+      <textarea id="captura" class="captura" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Digite aqui"></textarea>
+      <div class="dica" id="cpDica" hidden></div>
+      <div class="jogo-botoes">
+        <button class="btn" id="btnOuvir">🔊 Ouvir <kbd>Tab</kbd></button>
+        <button class="btn" id="btnDica">💡 Dica <kbd>Ctrl</kbd>+<kbd>Espaço</kbd></button>
+      </div>
+    </div>
+    <p class="aviso-teclado" id="avisoFoco">Clique aqui e comece a digitar</p>
+  </section>
+
+  <!-- FIM DE FASE -->
+  <section class="tela" id="tela-fim">
+    <div class="fim-cabeca">
+      <div class="estrelas-grandes" id="fimEstrelas"></div>
+      <h2 id="fimTitulo"></h2>
+      <div class="fim-numeros" id="fimNumeros"></div>
+    </div>
+    <h3>Palavras desta fase</h3>
+    <div class="tabela-fim" id="fimTabela"></div>
+    <div class="fim-botoes">
+      <button class="btn" id="btnRepetir">↻ Repetir</button>
+      <button class="btn primario" id="btnProxima">Próxima fase →</button>
+    </div>
+  </section>
+
+  <!-- REVISÃO -->
+  <section class="tela" id="tela-revisao">
+    <h2>Revisão</h2>
+    <p class="sub">As palavras em que você mais erra ou pediu dica voltam aqui até você acertar sem erros.</p>
+    <div id="revisaoConteudo"></div>
+  </section>
+
+  <!-- DICIONÁRIO -->
+  <section class="tela" id="tela-dicionario">
+    <h2>Dicionário</h2>
+    <div class="filtros">
+      <input type="search" id="buscaPalavra" placeholder="Buscar em inglês ou português…">
+      <select id="filtroNivel"><option value="">Todos os níveis</option></select>
+      <select id="filtroTema"><option value="">Todos os temas</option></select>
+    </div>
+    <p class="contagem" id="dicContagem"></p>
+    <div class="lista-dic" id="listaDic"></div>
+  </section>
+
+  <!-- CONVERSA COM IA -->
+  <section class="tela" id="tela-conversa">
+
+    <!-- configuração da chave -->
+    <div id="convConfig" hidden>
+      <h2>Conversa com IA</h2>
+      <p class="sub">Converse em inglês com uma IA (Google Gemini) que responde em voz alta, corrige seus erros e ensina frases novas.</p>
+      <div class="cartao-config">
+        <h3>1. Pegue sua chave gratuita do Google</h3>
+        <ol class="passos">
+          <li>Abra o <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> e entre com sua conta Google.</li>
+          <li>Clique em <b>Create API key</b> (é grátis, não precisa de cartão).</li>
+          <li>Copie a chave e cole aqui embaixo.</li>
+        </ol>
+        <h3>2. Cole a chave</h3>
+        <div class="linha-chave">
+          <input type="password" id="convChave" placeholder="Cole sua chave aqui (começa com AIza…)" autocomplete="off" spellcheck="false">
+          <button class="btn primario" id="convSalvarChave">Salvar e testar</button>
+        </div>
+        <p class="nota-privacidade">🔒 A chave fica salva só neste navegador e é enviada apenas para o Google. Ela não vai para o backup nem para nenhum outro lugar.</p>
+        <p class="conv-status" id="convStatusChave"></p>
+      </div>
+    </div>
+
+    <!-- escolha do cenário -->
+    <div id="convInicio" hidden>
+      <div class="conv-cabeca">
+        <h2>Conversa com IA</h2>
+        <button class="btn-link" id="convTrocarChave">⚙️ Configurar IA</button>
+      </div>
+      <p class="sub">Escolha uma situação e o seu nível. A IA começa a conversa.</p>
+      <div class="cenarios" id="convCenarios"></div>
+      <div class="conv-opcoes">
+        <label>Nível
+          <select id="convNivel">
+            <option value="iniciante">Iniciante</option>
+            <option value="basico">Básico</option>
+            <option value="intermediario">Intermediário</option>
+            <option value="avancado">Avançado</option>
+          </select>
+        </label>
+        <label>Modelo <select id="convModelo"></select></label>
+      </div>
+      <div class="aviso" id="convAvisoMic" hidden></div>
+    </div>
+
+    <!-- conversa -->
+    <div id="convChat" hidden>
+      <div class="jogo-topo">
+        <button class="btn-link" id="convSair">← Cenários</button>
+        <div class="jogo-titulo" id="convTitulo"></div>
+        <button class="btn" id="convEncerrar">Encerrar e ver resumo</button>
+      </div>
+      <div class="chat" id="convMensagens"></div>
+      <div class="barra-fala">
+        <button class="btn-mic" id="convMic" title="Falar (segure Espaço)">🎤</button>
+        <input type="text" id="convTexto" placeholder="Fale (segure Espaço) ou digite em inglês…" autocomplete="off" spellcheck="false">
+        <button class="btn primario" id="convEnviar">Enviar</button>
+      </div>
+      <p class="conv-status" id="convStatus"></p>
+    </div>
+
+    <!-- resumo -->
+    <div id="convResumo" hidden>
+      <h2>Resumo da conversa</h2>
+      <div class="resumo" id="convResumoNumeros"></div>
+      <h3>Correções</h3>
+      <div id="convResumoCorrecoes"></div>
+      <h3 class="mt">Frases novas</h3>
+      <div id="convResumoFrases"></div>
+      <div class="fim-botoes">
+        <button class="btn" id="convNova">Nova conversa</button>
+        <button class="btn primario" id="convPraticarFrases">Digitar minhas frases →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTATÍSTICAS -->
+  <section class="tela" id="tela-stats">
+    <h2>Estatísticas</h2>
+    <div class="resumo" id="statsResumo"></div>
+    <h3>Minutos praticados (últimos 14 dias)</h3>
+    <div class="grafico" id="statsGrafico"></div>
+    <h3>Palavras que você mais erra</h3>
+    <div id="statsErros"></div>
+    <h3 class="mt">Configurações</h3>
+    <div class="config">
+      <label>Voz <select id="cfgVoz"></select></label>
+      <label>Velocidade da voz <input type="range" id="cfgVel" min="0.5" max="1.2" step="0.05"> <span id="cfgVelTxt"></span></label>
+      <label><input type="checkbox" id="cfgMaiusc"> Ignorar maiúsculas/minúsculas ao digitar</label>
+      <label><input type="checkbox" id="cfgAutoFalar"> Falar a palavra automaticamente</label>
+    </div>
+    <h3 class="mt">Backup do progresso</h3>
+    <p class="sub">O progresso fica salvo neste navegador. Exporte um backup de vez em quando.</p>
+    <div class="fim-botoes esq">
+      <button class="btn" id="btnExportar">⬇ Exportar backup</button>
+      <label class="btn">⬆ Importar backup<input type="file" id="arqImportar" accept=".json" hidden></label>
+      <button class="btn perigo" id="btnZerar">Apagar progresso</button>
+    </div>
+  </section>
+</main>
+
+<script src="dados/nivel1.js"></script>
+<script src="dados/nivel2.js"></script>
+<script src="dados/nivel3.js"></script>
+<script src="dados/nivel4.js"></script>
+<script src="app.js"></script>
+<script src="conversa.js"></script>
+</body>
+</html>
